@@ -1,14 +1,17 @@
 language: java
 sudo: false
+before_install: build/update_version.sh $(git describe --tags)
 deploy:
   provider: script
-  script: build/deploy.sh $DEPLOY_USERNAME $DEPLOY_SECRET
+  script: build/deploy.sh $DEPLOY_USERNAME $DEPLOY_SECRET $TRAVIS_TAG
   skip_cleanup: true
   on:
     tags: true
 cache:
   directories:
   - $HOME/.m2
+before_cache:
+  - rm -rf $HOME/.m2/repository/io/github/robotpy/plugins
 notifications:
   webhooks:
     urls:
